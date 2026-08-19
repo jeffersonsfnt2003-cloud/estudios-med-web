@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mazo · Atlas de Microanatomía I</title>
+<link rel="stylesheet" href="../web/sistema.css">
+<style>
+  :root{
+    --bg:var(--vidrio); --fg:var(--tinta); --muted:var(--grafito); --card:var(--papel); --card2:var(--marca-suave);
+    --line:var(--linea); --accent:var(--marca); --ok:var(--endo-txt); --learn:var(--aviso-txt); --shadow:none;
+  }
+  
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:var(--body);font-size:var(--t-base);line-height:var(--lh-base);
+    display:flex;flex-direction:column;min-height:100vh;padding:16px}
+  header{max-width:820px;margin:0 auto 12px;width:100%}
+  h1{font-size:var(--t-lg);line-height:var(--lh-lg);max-width:34ch;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:var(--t-sm)}
+  .bar{max-width:820px;margin:0 auto 14px;width:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  button,select{font:inherit;font-size:var(--t-sm);padding:0 14px;min-height:44px;border-radius:6px;display:inline-flex;align-items:center;border:1px solid var(--line);
+    background:var(--card);color:var(--fg);cursor:pointer;transition:transform .1s var(--ease-out),border-color .16s var(--ease-out)}
+  button:hover{border-color:var(--accent)}
+  button:active{transform:translateY(1px)}
+  .spacer{flex:1}
+  .counts{font-size:var(--t-xs);color:var(--muted);white-space:nowrap}
+  .counts b.ok{color:var(--ok)} .counts b.learn{color:var(--learn)}
+  main{flex:1;display:flex;align-items:center;justify-content:center;max-width:820px;margin:0 auto;width:100%}
+  .scene{width:100%;perspective:1400px}
+  .card{position:relative;width:100%;min-height:340px;transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+    padding:38px 34px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  .front{background:var(--card)}
+  .back{background:var(--card2);transform:rotateY(180deg)}
+  .tag{position:absolute;top:14px;left:16px;font-size:var(--t-xs);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .idx{position:absolute;top:14px;right:16px;font-size:var(--t-xs);color:var(--muted)}
+  .q{font-size:1.28rem;font-weight:600;line-height:1.4;max-width:46ch}
+  .a{font-size:1.02rem;line-height:1.6;max-width:56ch;text-align:left}
+  .a ul{margin:.4em 0;padding-left:1.15em} .a li{margin:.18em 0}
+  .hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:var(--t-xs);color:var(--muted)}
+  .nav{max-width:820px;margin:14px auto 0;width:100%;display:flex;gap:8px;align-items:center}
+  .nav button{flex:1}
+  .know{border-color:var(--ok);color:var(--ok)} .still{border-color:var(--learn);color:var(--learn)}
+  .prog{height:4px;background:var(--line);border-radius:2px;overflow:hidden;max-width:820px;margin:12px auto 0;width:100%}
+  .prog i{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;transition:transform .25s var(--ease-out)}
+  .done{text-align:center;padding:40px 20px}
+  @media (max-width:620px){ .q{font-size:1.1rem} .face{padding:30px 20px} .card{min-height:300px} }
+</style>
+</head>
+<body>
+<p style="padding:12px 16px 0;margin:0"><a class="btn btn-inicio" href="../web/index.html">← Inicio</a></p>
+<header>
+  <h1>Atlas de Microanatomía I · mazo de repaso</h1>
+  <div class="sub">Tronco encefálico (FAN 1-7) y embriología (FAE 1-11) · fuentes: Atlas, Barr 10ª, Langman 14ª, Ross 8ª</div>
+</header>
+
+<div class="bar">
+  <select id="filter">
+    <option value="all">Todas las categorías</option>
+    <option value="Tronco">Solo tronco encefálico</option>
+    <option value="Embrio">Solo embriología</option>
+  </select>
+  <button id="shuffle">Barajar</button>
+  <button id="onlyLearn">Repasar pendientes</button>
+  <button id="reset">Reiniciar</button>
+  <button id="csv">Descargar CSV (Anki)</button>
+  <div class="spacer"></div>
+  <div class="counts">✔ <b class="ok" id="cOk">0</b> · ↻ <b class="learn" id="cLearn">0</b> · <span id="cPos">0/0</span></div>
+</div>
+
+<main>
+  <div class="scene">
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="tag" id="tagF"></div><div class="idx" id="idxF"></div>
+        <div class="q" id="qText"></div>
+        <div class="hint">clic o barra espaciadora para voltear</div>
+      </div>
+      <div class="face back">
+        <div class="tag" id="tagB"></div><div class="idx" id="idxB"></div>
+        <div class="a" id="aText"></div>
+        <div class="hint">← → para navegar · 1 = la sé · 2 = repasar</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="prog"><i id="progBar"></i></div>
+
+<div class="nav">
+  <button id="prev">← Anterior</button>
+  <button class="know" id="btnKnow">1 · La sé</button>
+  <button class="still" id="btnStill">2 · Repasar</button>
+  <button id="next">Siguiente →</button>
+</div>
+
+<script type="application/json" id="cards">
+[
+{"c":"Tronco","q":"¿Qué proporción de fibras corticoespinales cruza en la decusación piramidal y adónde van?","a":"El 85 % cruza y forma el tracto corticoespinal lateral. El 15 % restante no cruza y desciende como tracto corticoespinal anterior."},
+{"c":"Tronco","q":"¿Qué lámina FAN muestra la parte media de la decusación piramidal?","a":"FAN-1. Se reconoce por los haces de fibras que cruzan oblicuamente la línea media ventral y porque todavía existen las astas grises anteriores."},
+{"c":"Tronco","q":"En FAN-1 los núcleos grácil y cuneiforme ya existen. ¿Qué estructura todavía NO se ve y por qué?","a":"El lemnisco medial: los núcleos están presentes pero sus axones aún no se han cruzado en la decusación de los lemniscos, que ocurre más rostral."},
+{"c":"Tronco","q":"¿Dónde y a partir de qué se forma el lemnisco medial?","a":"En el bulbo caudal, en la decusación de los lemniscos mediales. Los axones de los núcleos grácil y cuneiforme cruzan como fibras arciformes internas y giran en sentido cefálico."},
+{"c":"Tronco","q":"Firma de identificación de FAN-2","a":"Fibras arciformes internas cruzando hacia la línea media, con pirámides ya compactas que no cruzan. Aparecen los núcleos del XII y motor dorsal del X, pero aún no hay oliva."},
+{"c":"Tronco","q":"Firma de identificación de FAN-3","a":"La oliva inferior. Con ella aparecen el lemnisco medial ya formado (banda paramediana) y el cuerpo restiforme en dorsolateral."},
+{"c":"Tronco","q":"¿Qué forma tiene el núcleo olivar inferior en un corte?","a":"Forma de bolsa desinflada o saco plegado, con el hilio dirigido en sentido medial."},
+{"c":"Tronco","q":"¿Cuál es el origen de las fibras trepadoras del cerebelo?","a":"El complejo olivar inferior. Sus fibras olivocerebelosas cruzan la línea media, entran por el pedúnculo cerebeloso inferior y excitan las células de Purkinje."},
+{"c":"Tronco","q":"¿Qué es el cuerpo restiforme?","a":"El pedúnculo cerebeloso inferior. Su componente mayoritario son las fibras olivocerebelosas, seguidas de las del tracto espinocerebeloso posterior."},
+{"c":"Tronco","q":"Firma de identificación de FAN-4","a":"Bulbo abierto y ancho con núcleos vestibulares bajo el área vestibular, núcleo coclear dorsal sobre el pedúnculo cerebeloso inferior y estrías medulares. Es el nivel del nervio IX."},
+{"c":"Tronco","q":"Firma de identificación de FAN-5","a":"Aparece la base del puente con núcleos pontinos y pedúnculos cerebelosos medios, más el cuerpo trapezoide y el par de núcleos del V (sensitivo principal lateral, motor medial)."},
+{"c":"Tronco","q":"¿Qué es el cuerpo trapezoide y adónde lleva la señal?","a":"Los axones cruzados de los núcleos cocleares. Ascienden por el lemnisco lateral contralateral hasta el colículo inferior, con relevo parcial en el núcleo olivar superior."},
+{"c":"Tronco","q":"Firma de identificación de FAN-6","a":"El cuarto ventrículo ha sido sustituido por el acueducto cerebral. Emerge el nervio IV por dorsal y aparece el locus caeruleus en el extremo superior del surco limitante."},
+{"c":"Tronco","q":"Firma de identificación de FAN-7","a":"Tres marcas juntas: colículo inferior, decusación del brachium conjunctivum (pedúnculos cerebelosos superiores) y sustancia negra entre tegmento y base del pedúnculo."},
+{"c":"Tronco","q":"¿Cuál es el único par craneal que sale por la cara dorsal del tronco?","a":"El troclear (IV). Se decusa en el velo medular superior y emerge justo por debajo de los colículos inferiores. Inerva el oblicuo superior."},
+{"c":"Tronco","q":"¿Cuál es el único grupo de somas de neuronas sensitivas primarias dentro del SNC?","a":"El núcleo mesencefálico del trigémino. Sus neuronas unipolares son homólogas a las de un ganglio espinal y transportan propiocepción de los músculos masticadores."},
+{"c":"Tronco","q":"¿Qué posición ocupa el tracto espinotalámico a lo largo del tronco?","a":"Lateral en todos los niveles, sin cambios apreciables. Por eso no sirve para localizar un corte, pero sí para localizar una lesión."},
+{"c":"Tronco","q":"¿Cómo cambia de posición el lemnisco medial de bulbo a mesencéfalo?","a":"Paramediano y vertical en el bulbo, se horizontaliza y desplaza lateralmente en el puente, y queda lateral en el tegmento del mesencéfalo."},
+{"c":"Tronco","q":"Somatotopía del lemnisco medial en el bulbo","a":"Las fibras del pie van en posición más anterior (junto a la pirámide) y las del cuello en la más posterior. En el puente, tras rotar, el orden medial→lateral es cuello, brazo, tronco, pierna."},
+{"c":"Tronco","q":"Somatotopía de la base del pedúnculo cerebral","a":"Los tres quintos centrales son corticoespinales, ordenados de medial a lateral: cuello, brazo, tronco, pierna. La quinta parte medial es frontopontina; la lateral, parietotemporopontina."},
+{"c":"Tronco","q":"¿Qué cinco estructuras aparecen en los 7 cortes FAN y por tanto no localizan el nivel?","a":"Tracto espinotalámico lateral, fascículo longitudinal medial, tracto rubroespinal, tracto tectoespinal y tracto corticoespinal."},
+{"c":"Tronco","q":"Regla del surco limitante en el suelo del cuarto ventrículo","a":"Los núcleos motores quedan mediales al surco limitante y los sensitivos laterales. Deriva de las placas basal (ventral, eferente) y alar (dorsal, aferente) del embrión."},
+{"c":"Tronco","q":"¿Qué forma el colículo facial y qué implica una lesión ahí?","a":"Las fibras del núcleo motor del VII curvándose sobre el núcleo del VI (rodilla interna). Una lesión afecta a la vez al VI y al VII homolaterales."},
+{"c":"Tronco","q":"Enumera los siete núcleos motores de pares craneales y su nivel","a":"Mesencéfalo: oculomotor (III) y troclear (IV). Puente: motor del trigémino (V), motor del facial (VII) y motor ocular externo (VI) en la unión bulbopontina. Bulbo: ambiguo y del hipogloso (XII)."},
+{"c":"Tronco","q":"¿Cuáles son los núcleos parasimpáticos preganglionares del tronco?","a":"El de Edinger-Westphal (III), el núcleo dorsal del vago, y parte de las neuronas del núcleo ambiguo, cuyos axones van a los ganglios cardíacos."},
+{"c":"Tronco","q":"¿Qué inerva el núcleo ambiguo?","a":"Paladar blando, faringe, laringe y esófago superior, a través de la raíz craneal del accesorio y de los nervios vago y glosofaríngeo."},
+{"c":"Tronco","q":"¿Qué recibe el núcleo solitario y qué hace su porción superior?","a":"Recibe aferencias viscerales por el vago y el glosofaríngeo. Su porción superior es el núcleo gustativo, que recibe el gusto por los nervios facial, glosofaríngeo y vago."},
+{"c":"Tronco","q":"Los tres núcleos del trigémino y su función","a":"Espinal: dolor y temperatura (desciende hasta C2-C3). Pontino o principal: tacto epicrítico. Mesencefálico: propiocepción de los masticadores."},
+{"c":"Tronco","q":"Síndrome bulbar medial: vaso y clínica","a":"Oclusión de una rama bulbar de la arteria vertebral. Lesiona pirámide, lemnisco medial y fibras del XII: hemiparesia contralateral, pérdida contralateral de propiocepción y tacto epicrítico, parálisis lingual homolateral."},
+{"c":"Tronco","q":"Síndrome de Wallenberg: vaso y las cinco estructuras lesionadas","a":"Rama bulbar de la cerebelosa posteroinferior. Lesiona: pedúnculo cerebeloso inferior y núcleos vestibulares (vértigo, ataxia, nistagmo); tracto y núcleo espinal del V (anestesia térmico-dolorosa facial homolateral); espinotalámico (contralateral corporal); núcleo ambiguo (disfagia, disfonía); simpático descendente (Horner)."},
+{"c":"Tronco","q":"¿Por qué aparece síndrome de Horner en el Wallenberg?","a":"Porque las fibras simpáticas descendentes hacia la columna intermediolateral bajan homolateralmente por la parte lateral del bulbo, dentro del territorio infartado."},
+{"c":"Tronco","q":"Síndrome de Raymond","a":"Infarto de una rama pontina de la basilar en la región basal. Lesiona corticoespinal y fibras del VI, sin tocar núcleos del VI ni del VII: hemiparesia contralateral más parálisis del recto lateral homolateral con endotropía."},
+{"c":"Tronco","q":"Síndrome de Millard-Gübler","a":"Lesión anterolateral del puente inferior que afecta fibras motoras descendentes y el núcleo y axones del VII: hemiparesia contralateral más parálisis facial homolateral."},
+{"c":"Tronco","q":"Síndrome de Foville: ¿qué lo distingue de Millard-Gübler?","a":"La lesión es posteromedial e incluye el núcleo del VI con sus neuronas internucleares. Además de la parálisis facial y del recto lateral homolaterales, el recto medial contralateral falla en la mirada conjugada pero sí se contrae en convergencia."},
+{"c":"Tronco","q":"Síndrome de Weber","a":"Oclusión de una rama de la cerebral posterior en la base del pedúnculo. Hemiparesia contralateral más parálisis homolateral del III: ptosis, exotropía y midriasis."},
+{"c":"Tronco","q":"¿Qué añade el síndrome de Benedikt al de Weber?","a":"La lesión se extiende hacia atrás e incluye fibras eferentes cerebelosas, lo que añade temblor en las extremidades paréticas contralaterales."},
+{"c":"Tronco","q":"En un corte teñido con Weigert, ¿qué se ve oscuro y qué pálido?","a":"Oscuras las vainas de mielina, es decir los tractos. Pálidos los cúmulos de somas neuronales, es decir los núcleos."},
+{"c":"Tronco","q":"¿Qué es el óbex?","a":"El vértice del límite en V de la porción inferior del cuarto ventrículo. Separa la parte cerrada del bulbo (con conducto central) de la parte abierta (con suelo ventricular)."},
+{"c":"Tronco","q":"Agujeros de Magendie y de Luschka","a":"Magendie es la abertura media del cuarto ventrículo, en el velo medular inferior, y es la vía principal de salida del LCR al espacio subaracnoideo. Luschka son las dos aberturas laterales, en los ángulos pontocerebelosos."},
+{"c":"Tronco","q":"¿De dónde salen las fibras del pedúnculo cerebeloso medio?","a":"De los núcleos pontinos. Reciben fibras corticopontinas homolaterales, y sus axones cruzan la línea media para entrar en el hemisferio cerebeloso contralateral."},
+{"c":"Tronco","q":"¿Cómo se razona el nivel de una lesión de tronco en el examen?","a":"Primero el par craneal afectado da el nivel (XII bulbo medial; IX-X bulbo lateral; VI-VII puente; III mesencéfalo). Después el patrón sensitivo da la posición: lemnisco medial = medial; espinotalámico + espinal del V = lateral."},
+{"c":"Embrio","q":"¿Qué día aparece la placa neural?","a":"El día 18 tras la fecundación (estadios 6-7 de Carnegie), en la línea media dorsal del embrión, inducida por el mesodermo subyacente."},
+{"c":"Embrio","q":"¿Dónde empieza a fusionarse el tubo neural?","a":"A la altura de la quinta somita (región cervical) y avanza en dirección cefálica y caudal a la vez."},
+{"c":"Embrio","q":"¿Cuándo cierran los neuroporos?","a":"El anterior o craneal hacia el día 25 (etapa de 18-20 somitas); el posterior o caudal hacia el día 28 (etapa de 25 somitas)."},
+{"c":"Embrio","q":"¿A qué ritmo aparecen los somitas y cuántos hay al final?","a":"Unos 3 pares al día en secuencia craneocaudal, desde el día 20. Al final de la quinta semana hay 42-44 pares, lo que permite datar el embrión contándolos."},
+{"c":"Embrio","q":"Reparto de los somitas por región","a":"4 occipitales, 8 cervicales, 12 torácicos, 5 lumbares, 5 sacros y 8-10 coccígeos. Desaparecen el primer occipital y los últimos 5-7 coccígeos."},
+{"c":"Embrio","q":"Las tres franjas del mesodermo de medial a lateral","a":"Paraxial (somitas), intermedio (aparato urogenital) y placa lateral (que se desdobla en somatopleura y esplacnopleura). Se ven directamente en FAE-2 y FAE-4."},
+{"c":"Embrio","q":"Somatopleura frente a esplacnopleura","a":"Somatopleura es la hoja parietal, unida al ectodermo: forma la pared corporal y las serosas parietales. Esplacnopleura es la hoja visceral, unida al endodermo: forma la viscera y el corazón. Entre ambas queda el celoma intraembrionario."},
+{"c":"Embrio","q":"Los tres derivados del somita","a":"Esclerotoma (vértebras y costillas), miotoma (músculo) y dermatoma (dermis de la espalda). Cada uno conserva su inervación segmentaria de origen vaya donde vaya."},
+{"c":"Embrio","q":"¿Qué induce el esclerotoma y qué factor expresa?","a":"SHH y noggina secretadas por la notocorda y la placa del suelo del tubo neural. El esclerotoma inducido expresa PAX1, que activa la cascada de genes de cartílago y hueso."},
+{"c":"Embrio","q":"Gradiente de BMP4 y destino del ectodermo","a":"Concentración alta: epidermis. Intermedia, en el borde entre placa neural y ectodermo superficial: cresta neural. Muy baja: placa neural. NOG y CHRD regulan las concentraciones."},
+{"c":"Embrio","q":"Nombra ocho derivados de la cresta neural","a":"Ganglios espinales y de nervios craneales, ganglios simpáticos y parasimpáticos entéricos, médula suprarrenal, células de Schwann, melanocitos, odontoblastos, huesos y tejido conectivo de la cara, tabique troncoconal del corazón, células C del tiroides, meninges del prosencéfalo."},
+{"c":"Embrio","q":"Las dos rutas migratorias de la cresta neural del tronco","a":"Ruta dorsal, por la dermis hacia el ectodermo: melanocitos de piel y folículos pilosos. Ruta ventral, por la mitad anterior de cada somita: ganglios sensitivos, neuronas simpáticas y entéricas, células de Schwann y médula suprarrenal."},
+{"c":"Embrio","q":"¿Qué muestra FAE-1?","a":"Disco trilaminar plano a nivel de placa neural: 1 placa neural, 2 notocorda, 3 endodermo, 4 mesodermo, 5 ectodermo. Aún no hay surco ni pliegues."},
+{"c":"Embrio","q":"¿Qué defecto tiene la leyenda de FAE-2?","a":"La imagen rotula los números 8 y 9 pero la leyenda solo llega al 7. Por posición corresponderían a mesodermo de la placa lateral y cavidad intraembrionaria (celoma); conviene confirmarlo con el docente."},
+{"c":"Embrio","q":"Firma de identificación de FAE-3","a":"El tubo neural ya está cerrado (cambio decisivo respecto a FAE-2), con la cresta neural en posición dorsal antes de migrar, la placa lateral desdoblada en somatopleura y esplacnopleura, y el tubo cardíaco en ventral."},
+{"c":"Embrio","q":"¿Qué estructuras identifican FAE-4?","a":"Dermátomo y miótomo (somita ya diferenciado), cordón nefrogénico y conducto mesonéfrico o de Wolff (mesodermo intermedio), arterias vitelinas, aortas dorsales todavía pares e intestino."},
+{"c":"Embrio","q":"¿Qué muestra FAE-5 y qué es el istmo rombencefálico?","a":"Corte que sigue el eje del neuroeje con mielencéfalo, metencéfalo y mesencéfalo a la vez. El istmo rombencefálico es el límite mesencéfalo-metencéfalo y funciona como centro organizador."},
+{"c":"Embrio","q":"Correspondencia de las vesículas embrionarias con el adulto","a":"Mielencéfalo → bulbo raquídeo. Metencéfalo → puente y cerebelo. Mesencéfalo → mesencéfalo. Diencéfalo → tálamo, epitálamo, hipotálamo, subtálamo. Telencéfalo → hemisferios cerebrales."},
+{"c":"Embrio","q":"¿Qué reúne la lámina FAE-10?","a":"Los tres sistemas de la cabeza embrionaria: aparato faríngeo (arco, hendidura, bolsa y placa de cierre), hipófisis en formación (bolsa de Rathke más infundíbulo) y órganos de los sentidos (otocisto, copa óptica, cristalino)."},
+{"c":"Embrio","q":"Derivados de las bolsas faríngeas 1 a 4","a":"1ª: cavidad del oído medio y trompa de Eustaquio. 2ª: estroma de la amígdala palatina. 3ª: paratiroides inferiores y timo. 4ª y 5ª: paratiroides superiores y cuerpo ultimobranquial."},
+{"c":"Embrio","q":"Doble origen de la hipófisis","a":"La adenohipófisis viene de la bolsa de Rathke, evaginación ectodérmica del estomodeo. La neurohipófisis viene del infundíbulo, evaginación del diencéfalo. Ambas se ven en FAE-10."},
+{"c":"Embrio","q":"¿Qué tres derivados del intestino anterior aparecen juntos en FAE-7?","a":"Esófago, yema pulmonar (que dará laringe, tráquea, bronquios y alvéolos) y divertículo hepático. Con ellos, el seno venoso recibiendo la vena cardinal común."},
+{"c":"Embrio","q":"Secuencia cardíaca a lo largo de las láminas FAE","a":"Tubo cardíaco (FAE-3) → seno venoso (FAE-7) → atrio con ventrículo y bulbo cordis ya plegados (FAE-8) → bulbo cordis con endotelio y epimiocardio (FAE-11). Progresión craneocaudal."},
+{"c":"Embrio","q":"Campo cardíaco primario frente a secundario","a":"El primario (CCP) aporta las aurículas y el ventrículo izquierdo. El secundario (CCS) aporta parte de las aurículas, el ventrículo derecho, el cono arterial y el tronco arterial. Un fallo del CCS da transposición de grandes vasos, estenosis pulmonar o doble salida ventricular derecha."},
+{"c":"Embrio","q":"¿Cuál es el gen maestro del desarrollo cardíaco y qué lo induce?","a":"NKX2.5. Lo inducen las BMP secretadas por el endodermo anterior combinadas con la inhibición de la expresión de WNT."},
+{"c":"Embrio","q":"¿Qué queda de la notocorda en el adulto?","a":"El núcleo pulposo de los discos intervertebrales. En las láminas se ve bajo la médula espinal, por ejemplo en FAE-8."},
+{"c":"Embrio","q":"Tres excepciones de derivados que suelen preguntarse","a":"La vejiga es endodérmica pese a pertenecer al aparato urinario. La médula suprarrenal es de cresta neural mientras la corteza es mesodérmica. La dermis de cara y cuello es de cresta neural, no de dermatoma."},
+{"c":"Embrio","q":"Anencefalia frente a espina bífida","a":"Anencefalia: falla el cierre en el extremo craneal, no se forman prosencéfalo, bóveda craneal ni cuero cabelludo; es letal. Espina bífida: falla el cierre en cualquier punto de cervical a caudal, con la región lumbosacra como localización más frecuente."},
+{"c":"Embrio","q":"Gradación de la espina bífida de menor a mayor gravedad","a":"Espina bífida oculta (solo defecto del arco vertebral, a veces con hoyuelo o mechón de pelo) → meningocele (quiste con LCR) → mielomeningocele (contiene médula o raíces) → mielocele o raquisquisis (tejido nervioso expuesto)."},
+{"c":"Embrio","q":"Pauta de ácido fólico para prevenir defectos del tubo neural","a":"400 µg al día desde 3 meses antes de la concepción y durante todo el embarazo; previene el 50-70 % de los casos. Con antecedente de hijo afectado, 4.000 µg al día desde 1 mes antes."},
+{"c":"Embrio","q":"Dos causas típicas de hidrocefalia congénita","a":"Estenosis del acueducto cerebral y malformación de Chiari (bulbo y parte del cerebelo herniados al conducto vertebral cervical), esta última frecuentemente asociada a espina bífida."},
+{"c":"Embrio","q":"¿Qué es la extensión convergente y por qué importa?","a":"La intercalación de células de lateral a medial en el plano del tejido, que alarga la placa neural y el eje corporal. La regula la vía de polaridad celular planar; mutaciones de los genes VANGL de esa vía se asocian a defectos del tubo neural familiares."}
+]
+</script>
+
+<script>
+(function(){
+  const ALL = JSON.parse(document.getElementById('cards').textContent);
+  let deck = ALL.slice(), i = 0, flipped = false;
+  const state = new Map();   // índice en ALL -> 'ok' | 'learn'
+  const $ = id => document.getElementById(id);
+  const card = $('card');
+
+  function keyOf(c){ return ALL.indexOf(c); }
+
+  function render(){
+    if(!deck.length){
+      $('qText').textContent = 'No hay tarjetas con ese filtro.';
+      $('aText').textContent = '';
+      $('tagF').textContent = $('tagB').textContent = '';
+      $('idxF').textContent = $('idxB').textContent = '';
+      $('cPos').textContent = '0/0'; $('progBar').style.width = '0%';
+      return;
+    }
+    if(i >= deck.length) i = 0;
+    if(i < 0) i = deck.length - 1;
+    const c = deck[i];
+    card.classList.remove('flipped'); flipped = false;
+    $('qText').textContent = c.q;
+    $('aText').textContent = c.a;
+    const st = state.get(keyOf(c));
+    const mark = st === 'ok' ? ' · ✔' : st === 'learn' ? ' · ↻' : '';
+    $('tagF').textContent = $('tagB').textContent = (c.c === 'Tronco' ? 'Tronco encefálico' : 'Embriología') + mark;
+    $('idxF').textContent = $('idxB').textContent = (i+1) + ' / ' + deck.length;
+    $('cPos').textContent = (i+1) + '/' + deck.length;
+    $('progBar').style.transform='scaleX('+((i+1)/deck.length)+')';
+    let ok=0, learn=0;
+    state.forEach(v => v === 'ok' ? ok++ : learn++);
+    $('cOk').textContent = ok; $('cLearn').textContent = learn;
+  }
+
+  function flip(){ flipped = !flipped; card.classList.toggle('flipped', flipped); }
+  function go(d){ i += d; render(); }
+  function mark(v){ if(!deck.length) return; state.set(keyOf(deck[i]), v); go(1); }
+
+  function applyFilter(){
+    const f = $('filter').value;
+    deck = f === 'all' ? ALL.slice() : ALL.filter(c => c.c === f);
+    i = 0; render();
+  }
+
+  card.addEventListener('click', flip);
+  $('prev').onclick = () => go(-1);
+  $('next').onclick = () => go(1);
+  $('btnKnow').onclick = () => mark('ok');
+  $('btnStill').onclick = () => mark('learn');
+  $('filter').onchange = applyFilter;
+  $('shuffle').onclick = () => { for(let k=deck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[deck[k],deck[j]]=[deck[j],deck[k]];} i=0; render(); };
+  $('onlyLearn').onclick = () => {
+    const pend = ALL.filter(c => state.get(keyOf(c)) === 'learn');
+    if(!pend.length){ alert('No hay tarjetas marcadas como "Repasar".'); return; }
+    deck = pend; i = 0; render();
+  };
+  $('reset').onclick = () => { state.clear(); $('filter').value='all'; applyFilter(); };
+  $('csv').onclick = () => {
+    const esc = s => '"' + String(s).replace(/"/g,'""') + '"';
+    const csv = '﻿' + ALL.map(c => [esc(c.q), esc(c.a), esc(c.c)].join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    const a = document.createElement('a');
+    a.href = url; a.download = 'atlas-microanatomia-i-anki.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.addEventListener('keydown', e => {
+    if(e.key === ' '){ e.preventDefault(); flip(); }
+    else if(e.key === 'ArrowRight') go(1);
+    else if(e.key === 'ArrowLeft') go(-1);
+    else if(e.key === '1') mark('ok');
+    else if(e.key === '2') mark('learn');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

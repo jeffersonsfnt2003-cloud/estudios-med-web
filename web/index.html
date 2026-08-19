@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es" data-theme="light" data-sitio="milanesa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Estudios Med · Guías de clase</title>
+<link rel="stylesheet" href="sistema.css?v=1787174217">
+<style>
+/* Solo lo propio de la portada; el resto viene del sistema */
+.hero{max-width:1240px;margin:0 auto;padding:48px 24px 10px}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.02;margin:0 0 14px}
+.hero p{max-width:var(--medida);margin:0 0 28px;color:var(--grafito);font-size:var(--t-md)}
+.hero .buscador{max-width:640px;flex:none}
+.hero .buscador input{font-size:var(--t-base);min-height:52px;padding:0 18px 0 46px;
+  border:1px solid var(--marca-borde);border-radius:var(--r-tarjeta);background:var(--papel)}
+.hero .buscador .lupa{left:17px;font-size:var(--t-md);color:var(--marca)}
+.zona{max-width:1240px;margin:0 auto;padding:26px 24px 72px}
+.rotulo{font-family:var(--display);font-size:var(--t-xs);letter-spacing:.04em;
+  color:var(--grafito);margin:38px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--linea)}
+.rejilla{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:var(--r-tarjeta);
+  padding:24px;display:flex;flex-direction:column;
+  transition:border-color .18s var(--ease-out),transform .18s var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .tarjeta:hover{border-color:var(--marca-borde);transform:translateY(-2px)}
+}
+@media (prefers-reduced-motion:reduce){ .tarjeta:hover{transform:none} }
+.tarjeta .curso{font-family:var(--display);font-size:var(--t-xs);letter-spacing:.04em;
+  color:var(--grafito)}
+.tarjeta h2{font-family:var(--display);font-size:var(--t-xl);line-height:var(--lh-xl);font-weight:600;
+  margin:6px 0 16px;border:none;padding:0}
+.tarjeta h2 a{color:var(--tinta);text-decoration:none}
+.tarjeta h2 a:hover{color:var(--marca)}
+.cifras{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;margin:0 0 18px;
+  padding:16px 0;border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.cifras div{font-family:var(--display);font-size:var(--t-xs);color:var(--grafito);line-height:1.3}
+.cifras b{display:block;font-family:var(--body);font-size:var(--t-lg);color:var(--marca);line-height:1}
+.secs{margin:0 0 18px}
+.secs>summary{cursor:pointer;font-family:var(--display);font-size:var(--t-sm);color:var(--marca);
+  list-style:none;padding:8px 0;min-height:38px;display:flex;align-items:center}
+.secs>summary::-webkit-details-marker{display:none}
+.secs>summary::before{content:"▸ "} .secs[open]>summary::before{content:"▾ "}
+.secs ul{list-style:none;margin:8px 0 0;padding:0}
+.secs li.lam{margin:0 0 8px}
+.secs a{text-decoration:none;color:var(--tinta);display:block;padding:7px 9px;
+  border-radius:var(--r-control);font-size:var(--t-sm);min-height:36px}
+.secs a:hover{background:var(--marca-suave);color:var(--marca)}
+.secs li.lam>a .k{display:block;font-family:var(--display);font-size:var(--t-xs);
+  letter-spacing:.04em;color:var(--grafito)}
+.secs li.lam>a .t{font-family:var(--display);font-size:var(--t-sm);font-weight:600}
+.secs li.lam ul{border-left:1px solid var(--linea);margin-left:9px;padding-left:7px}
+.secs li.lam ul a{color:var(--grafito)}
+.btn-abrir{margin-top:auto;justify-content:center;background:var(--marca);border-color:var(--marca);
+  color:var(--papel);font-weight:600}
+.btn-abrir:hover{opacity:.9;color:var(--papel)}
+.extras{list-style:none;margin:0;padding:0;display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.extras a{display:block;background:var(--meso-tenue);border-radius:var(--r-tarjeta);
+  padding:16px 18px;text-decoration:none;color:var(--tinta)}
+.extras b{font-family:var(--display);font-size:var(--t-base);display:block;margin-bottom:2px}
+.extras span{font-size:var(--t-sm);color:var(--grafito)}
+.vacia{background:var(--papel);border:1px dashed var(--linea);border-radius:var(--r-tarjeta);
+  padding:28px;color:var(--grafito);font-size:var(--t-sm)}
+footer{max-width:1240px;margin:0 auto;padding:0 24px 54px;color:var(--grafito);
+  font-family:var(--display);font-size:var(--t-xs);letter-spacing:.04em;line-height:1.8}
+@media (max-width:600px){ .hero{padding:32px 16px 8px} .zona{padding:20px 16px 60px}
+  .cifras{grid-template-columns:repeat(2,1fr)} }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="marca">Estudios Med<b>Ciencias morfológicas</b></span>
+  <span class="crece"></span>
+  <button class="btn" id="tema"><span id="tema-icono">☾</span> <span id="tema-txt">Oscuro</span></button>
+</header>
+
+<section class="hero">
+  <h1>Guías de clase</h1>
+  <p>Cada guía práctica, desarrollada por completo y con la procedencia de cada dato. Busca un tema y entra directo a la sección donde está.</p>
+  <div class="buscador">
+    <span class="lupa">⌕</span>
+    <input type="search" id="q" placeholder="Buscar guía, lámina o sección…" autocomplete="off"
+           aria-label="Buscar entre todas las guías">
+    <ul class="resultados" id="res"></ul>
+  </div>
+</section>
+
+<div class="zona">
+  <p class="rotulo">Guías desarrolladas</p>
+  <div class="rejilla">
+    <article class="tarjeta">
+      <div class="cab">
+        <span class="curso">Morfo I · 2025</span>
+        <h2><a href="guia-01-embriologia-temprana.html">Guía 1 · Embriología</a></h2>
+      </div>
+      <div class="cifras">
+        <div><b>6</b>láminas</div>
+        <div><b>3</b>casos resueltos</div>
+        <div><b>23</b>preguntas</div>
+        <div><b>175</b>citas con página</div>
+        <div><b>10</b>tablas</div>
+        <div><b>6</b>figuras</div>
+      </div>
+      <details class="secs">
+        <summary>Ver las 16 secciones</summary>
+        <ul><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-1"><span class="k">01 · Marco y primera semana</span><span class="t">De la fecundación a la 8.ª semana</span></a><ul><li><a href="guia-01-embriologia-temprana.html#sec-01">Objetivos de la práctica</a></li><li><a href="guia-01-embriologia-temprana.html#sec-02">Primera semana: de la segmentación a la implantación</a></li></ul></li><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-2"><span class="k">02 · Segunda semana</span><span class="t">La semana del dos</span></a><ul><li><a href="guia-01-embriologia-temprana.html#sec-03">Día por día</a></li></ul></li><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-3"><span class="k">03 · Tercera semana · gastrulación</span><span class="t">Gastrulación</span></a><ul><li><a href="guia-01-embriologia-temprana.html#sec-04">Línea primitiva y ejes del cuerpo</a></li><li><a href="guia-01-embriologia-temprana.html#sec-05">Malformaciones ligadas a la gastrulación</a></li></ul></li><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-4"><span class="k">04 · Tercera a octava semana</span><span class="t">La forma del cuerpo</span></a><ul><li><a href="guia-01-embriologia-temprana.html#sec-06">Neurulación</a></li><li><a href="guia-01-embriologia-temprana.html#sec-07">Organización del mesodermo</a></li><li><a href="guia-01-embriologia-temprana.html#sec-08">Músculo y extremidades</a></li></ul></li><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-5"><span class="k">05 · Derivados de las capas</span><span class="t">Derivados de las tres hojas</span></a></li><li class="lam"><a href="guia-01-embriologia-temprana.html#lamina-6"><span class="k">06 · Diapositivas y autoevaluación</span><span class="t">Guion de laboratorio</span></a><ul><li><a href="guia-01-embriologia-temprana.html#sec-09">Prefijos, sufijos y términos Guía p. 12</a></li><li><a href="guia-01-embriologia-temprana.html#sec-10">Pregunta de complemento agrupado Guía p. 13</a></li></ul></li></ul>
+      </details>
+      <a class="btn btn-abrir" href="guia-01-embriologia-temprana.html">Abrir la guía →</a>
+    </article></div>
+
+  <p class="rotulo">Material complementario</p>
+  <ul class="extras"><li><a href="medula-espinal.html"><b>Médula espinal</b><span>Lámina 01 · Médula espinal · Lámina 02 · Vías sensitivas</span></a></li></ul>
+
+
+  <p class="rotulo">Próximas guías</p>
+  <div class="vacia">Al entregar la siguiente guía aparecerá aquí, con el mismo formato: láminas navegables, casos resueltos, preguntas respondidas y cada dato con su capítulo y su página.</div>
+</div>
+
+<footer>Estudios Med · material derivado de Langman 14.ª ed., Barr 10.ª ed., Ross &amp; Pawlina 8.ª ed. y el Atlas de Microanatomía</footer>
+
+<script id="indice" type="application/json">[{"g": "Guía 1 · Embriología", "t": "Guía 1 · Embriología", "u": "guia-01-embriologia-temprana.html", "k": "guía"}, {"g": "Guía 1 · Embriología", "t": "De la fecundación a la 8.ª semana", "u": "guia-01-embriologia-temprana.html#lamina-1", "k": "01 · Marco y primera semana"}, {"g": "Guía 1 · Embriología", "t": "Objetivos de la práctica", "u": "guia-01-embriologia-temprana.html#sec-01", "k": "01 · Marco y primera semana"}, {"g": "Guía 1 · Embriología", "t": "Primera semana: de la segmentación a la implantación", "u": "guia-01-embriologia-temprana.html#sec-02", "k": "01 · Marco y primera semana"}, {"g": "Guía 1 · Embriología", "t": "La semana del dos", "u": "guia-01-embriologia-temprana.html#lamina-2", "k": "02 · Segunda semana"}, {"g": "Guía 1 · Embriología", "t": "Día por día", "u": "guia-01-embriologia-temprana.html#sec-03", "k": "02 · Segunda semana"}, {"g": "Guía 1 · Embriología", "t": "Gastrulación", "u": "guia-01-embriologia-temprana.html#lamina-3", "k": "03 · Tercera semana · gastrulación"}, {"g": "Guía 1 · Embriología", "t": "Línea primitiva y ejes del cuerpo", "u": "guia-01-embriologia-temprana.html#sec-04", "k": "03 · Tercera semana · gastrulación"}, {"g": "Guía 1 · Embriología", "t": "Malformaciones ligadas a la gastrulación", "u": "guia-01-embriologia-temprana.html#sec-05", "k": "03 · Tercera semana · gastrulación"}, {"g": "Guía 1 · Embriología", "t": "La forma del cuerpo", "u": "guia-01-embriologia-temprana.html#lamina-4", "k": "04 · Tercera a octava semana"}, {"g": "Guía 1 · Embriología", "t": "Neurulación", "u": "guia-01-embriologia-temprana.html#sec-06", "k": "04 · Tercera a octava semana"}, {"g": "Guía 1 · Embriología", "t": "Organización del mesodermo", "u": "guia-01-embriologia-temprana.html#sec-07", "k": "04 · Tercera a octava semana"}, {"g": "Guía 1 · Embriología", "t": "Músculo y extremidades", "u": "guia-01-embriologia-temprana.html#sec-08", "k": "04 · Tercera a octava semana"}, {"g": "Guía 1 · Embriología", "t": "Derivados de las tres hojas", "u": "guia-01-embriologia-temprana.html#lamina-5", "k": "05 · Derivados de las capas"}, {"g": "Guía 1 · Embriología", "t": "Guion de laboratorio", "u": "guia-01-embriologia-temprana.html#lamina-6", "k": "06 · Diapositivas y autoevaluación"}, {"g": "Guía 1 · Embriología", "t": "Prefijos, sufijos y términos Guía p. 12", "u": "guia-01-embriologia-temprana.html#sec-09", "k": "06 · Diapositivas y autoevaluación"}, {"g": "Guía 1 · Embriología", "t": "Pregunta de complemento agrupado Guía p. 13", "u": "guia-01-embriologia-temprana.html#sec-10", "k": "06 · Diapositivas y autoevaluación"}, {"g": "Material complementario", "t": "Médula espinal", "u": "medula-espinal.html", "k": "lámina"}]</script>
+<script>
+(function(){
+  var d=document, root=d.documentElement;
+  var guardado=null; try{ guardado=localStorage.getItem(root.dataset.sitio+'-tema'); }catch(e){}
+  aplicar(guardado==='dark'?'dark':'light');
+  function aplicar(t){
+    root.setAttribute('data-theme',t);
+    d.getElementById('tema-icono').textContent=t==='dark'?'☀':'☾';
+    d.getElementById('tema-txt').textContent=t==='dark'?'Claro':'Oscuro';
+    var m=d.querySelector('meta[name=theme-color]');
+    if(m) m.setAttribute('content', t==='dark'?'#151f2b':'#ffffff');
+    try{ localStorage.setItem(root.dataset.sitio+'-tema',t); }catch(e){}
+  }
+  d.getElementById('tema').onclick=function(){
+    aplicar(root.getAttribute('data-theme')==='dark'?'light':'dark'); };
+
+  var IDX=JSON.parse(d.getElementById('indice').textContent);
+  var q=d.getElementById('q'), res=d.getElementById('res'), sel=-1, hits=[];
+  function norm(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+  function buscar(){
+    var t=norm(q.value.trim());
+    if(t.length<2){ res.classList.remove('abierto'); res.innerHTML=''; return; }
+    hits=IDX.filter(function(i){ return norm(i.t).indexOf(t)>-1 || norm(i.k).indexOf(t)>-1; }).slice(0,14);
+    if(!hits.length){ res.innerHTML='<li class="vacio">Sin resultados para «'+q.value+'»</li>';
+      res.classList.add('abierto'); return; }
+    res.innerHTML=hits.map(function(h,n){
+      var i=norm(h.t).indexOf(t), et=h.t;
+      if(i>-1) et=h.t.slice(0,i)+'<mark>'+h.t.slice(i,i+t.length)+'</mark>'+h.t.slice(i+t.length);
+      return '<li><a href="'+h.u+'" data-n="'+n+'"><span class="via">'+h.g+' · '+h.k+'</span>'+et+'</a></li>';
+    }).join(''); res.classList.add('abierto'); sel=-1;
+  }
+  q.addEventListener('input',buscar);
+  q.addEventListener('keydown',function(e){
+    var as=res.querySelectorAll('a');
+    if(e.key==='Escape'){ q.value=''; res.classList.remove('abierto'); q.blur(); }
+    else if(e.key==='ArrowDown'&&as.length){ e.preventDefault(); sel=Math.min(sel+1,as.length-1); pinta(as); }
+    else if(e.key==='ArrowUp'&&as.length){ e.preventDefault(); sel=Math.max(sel-1,0); pinta(as); }
+    else if(e.key==='Enter'&&hits.length){ e.preventDefault(); location.href=hits[sel<0?0:sel].u; }
+  });
+  function pinta(as){ Array.prototype.forEach.call(as,function(a,n){ a.classList.toggle('sel',n===sel);
+    if(n===sel) a.scrollIntoView({block:'nearest'}); }); }
+  d.addEventListener('click',function(e){ if(!e.target.closest('.buscador')) res.classList.remove('abierto'); });
+  d.addEventListener('keydown',function(e){
+    if(e.key==='/'&&d.activeElement!==q){ e.preventDefault(); q.focus(); }
+    if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); q.focus(); }
+  });
+})();
+</script>
+</body>
+</html>

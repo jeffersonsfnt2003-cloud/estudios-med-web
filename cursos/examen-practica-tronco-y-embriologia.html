@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Examen de práctica · Tronco encefálico y embriología</title>
+<link rel="stylesheet" href="../web/sistema.css">
+<style>
+  :root{
+    --bg:var(--vidrio); --fg:var(--tinta); --muted:var(--grafito); --panel:var(--papel); --line:var(--linea);
+    --blue:var(--marca); --green:var(--endo-txt); --red:var(--meso-txt); --amber:var(--aviso-txt);
+    --soft:var(--marca-suave); --shadow:none;
+  }
+  
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:var(--body);font-size:var(--t-base);line-height:var(--lh-base);padding:24px 16px}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:var(--t-lg);line-height:var(--lh-lg);max-width:34ch;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:.9rem;margin-bottom:22px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:26px;box-shadow:var(--shadow)}
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:var(--t-xs);
+    color:var(--muted);margin-bottom:12px}
+  .topic{background:var(--soft);border-radius:20px;padding:3px 11px;font-size:var(--t-xs);color:var(--muted)}
+  .prog{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:20px}
+  .prog i{display:block;height:100%;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;transition:transform .25s var(--ease-out)}
+  .q{font-size:1.08rem;font-weight:600;line-height:1.5;margin:0 0 18px}
+  .opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
+    border:1px solid var(--line);background:var(--panel);color:var(--fg);
+    border-radius:9px;padding:13px 15px;margin-bottom:9px;cursor:pointer;font:inherit;
+    transition:border-color .12s,background .12s}
+  .opt:hover:not(:disabled){border-color:var(--blue)}
+  .opt:disabled{cursor:default}
+  .opt .k{flex:0 0 22px;height:22px;border-radius:5px;background:var(--soft);
+    display:grid;place-items:center;font-size:var(--t-xs);font-weight:700;color:var(--muted)}
+  .opt.right{border-color:var(--green);background:color-mix(in srgb,var(--green) 9%,transparent)}
+  .opt.right .k{background:var(--green);color:#fff}
+  .opt.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 9%,transparent)}
+  .opt.wrong .k{background:var(--red);color:#fff}
+  .opt.dunno{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+  .opt.dunno .k{background:var(--amber);color:#fff}
+  .expl{background:var(--soft);border-radius:8px;
+    padding:14px 16px;margin-top:16px;font-size:.95rem}
+  .expl b{display:block;margin-bottom:5px;font-size:var(--t-xs);letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted)}
+  .hintbox{background:var(--aviso-tenue);border-radius:8px;
+    padding:12px 15px;margin-top:14px;font-size:var(--t-sm)}
+  .row{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
+  button.act{font:inherit;font-size:var(--t-sm);padding:0 16px;min-height:44px;border-radius:6px;display:inline-flex;align-items:center;
+    border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+  button.act:hover{border-color:var(--blue)}
+  button.act.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+  button.act:disabled{opacity:.4;cursor:default}
+  .spacer{flex:1}
+  .score{font-size:3rem;font-weight:700;letter-spacing:-.03em;margin:6px 0}
+  .pct{color:var(--muted);font-size:1rem;margin-bottom:20px}
+  .tally{display:flex;gap:22px;margin:18px 0;flex-wrap:wrap}
+  .tally div{font-size:.9rem} .tally b{display:block;font-size:1.5rem}
+  .tally .g b{color:var(--green)} .tally .r b{color:var(--red)} .tally .a b{color:var(--amber)}
+  .bytopic{margin:16px 0;font-size:.9rem}
+  .bytopic li{margin:.25em 0}
+  .toast{color:var(--green);font-size:var(--t-sm);margin-top:9px;min-height:1.2em}
+  @media(max-width:620px){ .panel{padding:18px} body{padding:14px 10px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p style="margin:0 0 14px"><a class="btn btn-inicio" href="../web/index.html">← Inicio</a></p>
+  <h1>Examen de práctica · Tronco encefálico y embriología</h1>
+  <div class="sub">Atlas de Microanatomía I · 22 preguntas · unos 30 minutos · autocorregible</div>
+  <div id="app"></div>
+</div>
+
+<script type="application/json" id="quiz">
+[
+{"t":"Identificación de nivel","q":"Un corte teñido con Weigert muestra un núcleo plegado con forma de bolsa desinflada e hilio medial, una banda paramediana vertical de sustancia blanca y un área compacta de sustancia blanca en posición dorsolateral. ¿A qué nivel corresponde?","o":["Bulbo a nivel de la decusación piramidal","Bulbo a nivel de la parte caudal de la oliva inferior","Protuberancia a nivel del trigémino","Mesencéfalo a nivel del colículo inferior"],"c":1,"h":"El núcleo plegado con hilio medial es característico y no aparece en ningún nivel más caudal.","e":"Es FAN-3. El núcleo plegado es la oliva inferior, la banda paramediana es el lemnisco medial ya formado y el área dorsolateral es el cuerpo restiforme. La oliva no existe en la decusación piramidal y desaparece antes del puente."},
+{"t":"Identificación de nivel","q":"En un corte se ven haces de fibras que atraviesan oblicuamente la línea media ventral, todavía hay astas grises anteriores y los fascículos grácil y cuneiforme están presentes, pero no se identifica lemnisco medial. ¿Qué nivel es?","o":["Bulbo a nivel de la parte media de la decusación piramidal","Bulbo a nivel del límite rostral de la decusación","Bulbo a nivel del nervio glosofaríngeo","Unión bulbopontina"],"c":0,"h":"Fíjate en qué está cruzando: ¿fibras motoras descendentes o fibras sensitivas ascendentes?","e":"Es FAN-1. Lo que cruza son las fibras corticoespinales (85 % del total). Los núcleos grácil y cuneiforme apenas empiezan, así que sus axones todavía no han cruzado y el lemnisco medial aún no existe. Ese cruce sensitivo ocurre más rostral, en FAN-2."},
+{"t":"Identificación de nivel","q":"Un corte muestra una parte basal con haces longitudinales y transversales mezclados con grupos neuronales, pedúnculos cerebelosos medios a los lados, un haz que cruza el tegmento por delante del lemnisco medial y dos núcleos emparejados en el tegmento lateral. ¿Qué nivel es?","o":["Bulbo abierto a nivel del IX","Protuberancia a nivel del trigémino","Mesencéfalo a nivel del acueducto","Bulbo a nivel de la oliva media"],"c":1,"h":"La parte basal con núcleos intercalados solo existe en un segmento del tronco.","e":"Es FAN-5. La parte basal con núcleos pontinos y los pedúnculos cerebelosos medios definen el puente. El haz que cruza es el cuerpo trapezoide y los dos núcleos emparejados son el sensitivo principal (lateral) y el motor (medial) del trigémino."},
+{"t":"Identificación de nivel","q":"¿Cuál es el cambio anatómico que separa de forma inequívoca los cortes de puente de los de mesencéfalo en esta serie?","o":["La aparición de la sustancia negra","La sustitución del cuarto ventrículo por el acueducto cerebral","La desaparición del tracto espinotalámico","La aparición del fascículo longitudinal medial"],"c":1,"h":"Piensa en la cavidad ventricular, no en un núcleo.","e":"El cuarto ventrículo, amplio en bulbo y puente, se estrecha hasta el acueducto mesencefálico. La sustancia negra también aparece en el mesencéfalo, pero el cambio de cavidad es el más visible y no admite duda. El espinotalámico y el FLM están presentes en todos los niveles."},
+{"t":"Identificación de nivel","q":"Tres estructuras coexisten en un mismo corte: un gran núcleo dorsal de la vía auditiva, la decusación del brachium conjunctivum y una banda pigmentada entre tegmento y base del pedúnculo. ¿Qué lámina es?","o":["FAN-5","FAN-6","FAN-7","FAN-4"],"c":2,"h":"Los pedúnculos cerebelosos superiores cruzan exactamente a una altura concreta.","e":"Es FAN-7, mesencéfalo a nivel del colículo inferior. El núcleo auditivo es el colículo inferior, donde termina el lemnisco lateral; los pedúnculos cerebelosos superiores se decusan justo a esa altura; y la banda pigmentada es la sustancia negra (locus niger)."},
+{"t":"Diferencial de cortes","q":"¿Cuál es el criterio más fiable para distinguir FAN-2 de FAN-3?","o":["La presencia del fascículo longitudinal medial","La presencia de la oliva inferior","La presencia del tracto espinal del trigémino","La presencia del tracto corticoespinal"],"c":1,"h":"Descarta primero todo lo que aparezca en los dos cortes: no sirve para diferenciarlos.","e":"El FLM, el tracto espinal del V y el corticoespinal están en ambos, así que no discriminan. La oliva inferior aparece en FAN-3 y no en FAN-2. En FAN-2 lo característico son las fibras arciformes internas formando el lemnisco medial."},
+{"t":"Localización de lesión","q":"Paciente con hemiparesia izquierda, pérdida izquierda de la sensibilidad propioceptiva y del tacto epicrítico, y desviación de la lengua hacia la derecha al protruirla. ¿Dónde está la lesión?","o":["Bulbo lateral derecho","Bulbo medial derecho","Puente basal izquierdo","Mesencéfalo derecho"],"c":1,"h":"La lengua se desvía hacia el lado de la lesión del XII. Eso te da el lado; las vías largas te dan el nivel y la posición.","e":"Síndrome bulbar medial derecho, por oclusión de una rama bulbar de la arteria vertebral. Lesiona pirámide derecha (hemiparesia contralateral izquierda), lemnisco medial derecho (pérdida contralateral de propiocepción y tacto epicrítico) y las fibras del XII derecho (parálisis lingual homolateral, con desviación hacia el lado paralizado)."},
+{"t":"Localización de lesión","q":"Paciente con vértigo, ataxia y nistagmo; pérdida de sensibilidad térmica y dolorosa en la hemicara derecha y en el hemicuerpo izquierdo; disfagia y disfonía; ptosis y miosis derechas. ¿Qué vaso se ocluyó?","o":["Rama bulbar de la arteria vertebral derecha","Rama bulbar de la arteria cerebelosa posteroinferior derecha","Rama pontina de la arteria basilar","Rama de la arteria cerebral posterior derecha"],"c":1,"h":"La disociación cara-cuerpo cruzada del dolor y la temperatura es el sello de este territorio.","e":"Síndrome bulbar lateral o de Wallenberg, por rama bulbar de la cerebelosa posteroinferior. La anestesia térmico-dolorosa facial es homolateral (núcleo y tracto espinal del V) y la corporal contralateral (espinotalámico, ya cruzado). La disfagia y disfonía vienen del núcleo ambiguo, y el Horner de la vía simpática descendente."},
+{"t":"Correlación clínica","q":"¿Por qué el síndrome de Wallenberg produce síndrome de Horner homolateral?","o":["Porque lesiona el núcleo de Edinger-Westphal","Porque interrumpe las fibras simpáticas descendentes que van a la columna intermediolateral y que bajan por la parte lateral del bulbo","Porque comprime el ganglio cervical superior","Porque lesiona el nervio oculomotor"],"c":1,"h":"El Horner es un fallo simpático, no parasimpático. ¿Por dónde baja esa vía?","e":"La vía simpática descendente hacia la columna intermediolateral desciende homolateralmente por la parte lateral del bulbo, dentro del área infartada. Por eso aparecen miosis y ptosis del lado de la lesión, con piel facial seca y caliente. Edinger-Westphal y el III son parasimpáticos: su lesión da midriasis, lo contrario."},
+{"t":"Correlación clínica","q":"Paciente con hemiparesia izquierda, ptosis derecha, ojo derecho desviado hacia fuera y abajo, y pupila derecha midriática. ¿Cuál es el diagnóstico topográfico?","o":["Síndrome de Weber","Síndrome de Millard-Gübler","Síndrome bulbar medial","Síndrome de Foville"],"c":0,"h":"El par craneal afectado te da el nivel. ¿Qué nervio inerva el elevador del párpado y lleva las fibras pupiloconstrictoras?","e":"Síndrome de Weber: lesión de la base del pedúnculo cerebral derecho por rama de la cerebral posterior. Afecta fibras corticoespinales (hemiparesia contralateral) y las fibras del III (ptosis, exotropía y midriasis homolaterales). Si además hubiera temblor contralateral, sería Benedikt."},
+{"t":"Diferencial clínico","q":"¿Qué signo distingue el síndrome de Foville del de Millard-Gübler?","o":["La presencia de parálisis facial homolateral","La presencia de hemiparesia contralateral","El fallo del recto medial contralateral en la mirada conjugada, que sí se contrae en convergencia","La presencia de anestesia facial homolateral"],"c":2,"h":"Los dos comparten VII y hemiparesia. Piensa en qué neuronas hay dentro del núcleo del VI además de las motoneuronas.","e":"Ambos dan parálisis facial homolateral y hemiparesia contralateral. Foville añade la lesión de las neuronas internucleares del núcleo del VI, cuyos axones cruzan y suben por el FLM hasta el subnúcleo del recto medial contralateral. Por eso falla la aducción en la mirada conjugada pero se conserva en la convergencia, que usa otra vía."},
+{"t":"Trayecto de tractos","q":"En un corte de mesencéfalo, ¿dónde se localiza el lemnisco medial respecto a su posición en el bulbo?","o":["En la misma posición paramediana","Se ha desplazado a una posición lateral en el tegmento","Ha cruzado al lado contrario","Se ha incorporado a la base del pedúnculo"],"c":1,"h":"El lemnisco rota progresivamente a medida que asciende.","e":"El lemnisco medial es paramediano y vertical en el bulbo, se horizontaliza y desplaza lateralmente en el puente, y queda lateral en el tegmento mesencefálico hasta terminar en el núcleo ventral posterolateral del tálamo. Cruzó una sola vez, en el bulbo caudal, y no vuelve a cruzar."},
+{"t":"Identificación de error","q":"Un compañero afirma: «El tracto espinotalámico cruza la línea media en el bulbo, igual que el lemnisco medial, y por eso ambos van juntos». ¿Cuál es el error?","o":["El espinotalámico no cruza nunca","El espinotalámico cruza en la médula espinal, segmento a segmento, no en el bulbo","El lemnisco medial cruza en el puente, no en el bulbo","Ambos cruzan en el mesencéfalo"],"c":1,"h":"Piensa dónde está la primera sinapsis de cada vía.","e":"El espinotalámico cruza en la médula espinal, en cada segmento, justo tras la sinapsis en el asta posterior; por eso llega al tronco ya cruzado y se mantiene lateral. El lemnisco medial cruza en el bulbo caudal tras hacer sinapsis en los núcleos grácil y cuneiforme. Esa diferencia explica la disociación sensitiva de las lesiones medulares y de tronco."},
+{"t":"Núcleos de pares craneales","q":"¿Qué tiene de excepcional el núcleo mesencefálico del trigémino?","o":["Es el único núcleo motor del mesencéfalo","Es el único grupo de somas de neuronas sensitivas primarias situado dentro del SNC","Es el único núcleo que recibe información de los dos lados","Es el único núcleo parasimpático del tronco"],"c":1,"h":"Compáralo con dónde están normalmente los somas de las neuronas sensitivas primarias.","e":"Sus neuronas unipolares son homólogas a las de un ganglio espinal, pero están dentro del SNC en vez de en un ganglio periférico. Transportan sobre todo propiocepción de los músculos de la masticación por la división mandibular del V."},
+{"t":"Anatomía del cuarto ventrículo","q":"¿Qué forma el colículo facial del suelo del cuarto ventrículo y qué consecuencia clínica tiene?","o":["El núcleo del VII; su lesión da solo parálisis facial","Las fibras del núcleo motor del VII curvándose sobre el núcleo del VI; una lesión afecta a los dos pares","El núcleo del VI; su lesión da solo endotropía","El núcleo vestibular superior; su lesión da vértigo"],"c":1,"h":"El abombamiento no lo produce el núcleo que está debajo, sino algo que pasa por encima de él.","e":"Los axones del núcleo motor del facial forman la rodilla interna, que se curva sobre el núcleo del motor ocular externo y abomba el suelo ventricular. Por eso una lesión en el colículo facial produce parálisis facial y del recto lateral homolaterales a la vez, como en el síndrome de Foville."},
+{"t":"Regla organizativa","q":"En el suelo del cuarto ventrículo, ¿cómo se distribuyen los núcleos respecto al surco limitante y de dónde viene esa regla?","o":["Motores laterales y sensitivos mediales; deriva de la cresta neural","Motores mediales y sensitivos laterales; deriva de las placas basal y alar","Motores anteriores y sensitivos posteriores; deriva de la notocorda","No hay regla: la distribución es aleatoria"],"c":1,"h":"Recuerda la organización dorsoventral del tubo neural y qué le pasa al abrirse el techo.","e":"La placa basal es ventral y eferente; la alar es dorsal y aferente. Al abrirse el tubo neural en la región del cuarto ventrículo, esa relación dorsoventral se despliega en mediolateral: motores mediales, sensitivos laterales. Es el puente conceptual entre las láminas FAE y las FAN."},
+{"t":"Cronología embrionaria","q":"¿En qué días cierran los neuroporos y en qué etapa de somitas?","o":["Anterior el día 21 y posterior el día 24","Anterior el día 25 (18-20 somitas) y posterior el día 28 (25 somitas)","Ambos el día 28","Anterior el día 28 y posterior el día 25"],"c":1,"h":"La fusión empieza a la altura de la quinta somita y avanza en ambos sentidos; el extremo caudal tarda más.","e":"El neuroporo anterior cierra hacia el día 25 con 18-20 somitas y el posterior hacia el día 28 con 25 somitas. Si falla el craneal se produce anencefalia; si falla en cualquier punto de cervical a caudal, espina bífida, con la región lumbosacra como localización más frecuente."},
+{"t":"Derivados embrionarios","q":"¿Cuál de estas estructuras NO deriva de la cresta neural?","o":["Médula suprarrenal","Tabique troncoconal del corazón","Corteza suprarrenal","Células de Schwann"],"c":2,"h":"En la misma glándula conviven dos orígenes embrionarios distintos.","e":"La corteza suprarrenal es mesodérmica; la médula suprarrenal es de cresta neural (células secretoras derivadas de la vía migratoria ventral). El tabique troncoconal y las células de Schwann también son de cresta neural. Es una de las excepciones más preguntadas."},
+{"t":"Regulación molecular","q":"¿Qué concentración de BMP4 induce la formación de la cresta neural?","o":["Concentración alta, la misma que induce epidermis","Concentración intermedia, en el borde entre placa neural y ectodermo superficial","Concentración nula","BMP4 no participa en la inducción de la cresta neural"],"c":1,"h":"El destino del ectodermo es un gradiente de tres escalones, no una decisión binaria.","e":"Alta concentración da epidermis, muy baja da placa neural, e intermedia, justo en el borde, da cresta neural. NOG y CHRD modulan esas concentraciones; junto con FGF y WNT inducen PAX3, y después SNAIL y FOXD3 especifican la cresta mientras SLUG promueve su migración."},
+{"t":"Aparato faríngeo","q":"Un recién nacido presenta tetania por hipocalcemia e infecciones de repetición por déficit de linfocitos T. ¿Qué estructura embrionaria falló?","o":["La primera bolsa faríngea","La segunda bolsa faríngea","La tercera bolsa faríngea","La cuarta hendidura faríngea"],"c":2,"h":"Busca la bolsa que da a la vez una glándula del calcio y un órgano linfático primario.","e":"La tercera bolsa faríngea da las paratiroides inferiores y el timo. Su fallo explica a la vez la hipocalcemia con tetania y el déficit de linfocitos T. La primera da oído medio y trompa de Eustaquio; la segunda, el estroma de la amígdala palatina; la cuarta, paratiroides superiores y cuerpo ultimobranquial."},
+{"t":"Derivados embrionarios","q":"La hipófisis tiene doble origen embrionario. ¿Cuál es?","o":["Ambos lóbulos derivan del diencéfalo","Adenohipófisis de la bolsa de Rathke (ectodermo del estomodeo) y neurohipófisis del infundíbulo (diencéfalo)","Adenohipófisis del endodermo faríngeo y neurohipófisis de la cresta neural","Ambos lóbulos derivan de la bolsa de Rathke"],"c":1,"h":"Una parte sube desde el techo de la boca primitiva; la otra baja desde el encéfalo.","e":"La bolsa de Rathke es una evaginación ectodérmica del estomodeo que forma la adenohipófisis; el infundíbulo es una evaginación del diencéfalo que forma la neurohipófisis. Ambas se ven juntas en la lámina FAE-10, junto con arcos faríngeos, copa óptica y cristalino."},
+{"t":"Cardiogénesis","q":"Un neonato presenta transposición de los grandes vasos. ¿Qué población embrionaria falló?","o":["El campo cardíaco primario","El campo cardíaco secundario y la contribución de la cresta neural al tabique troncoconal","El mesodermo intermedio","El endodermo del intestino anterior"],"c":1,"h":"El defecto está en el tracto de salida, no en las aurículas ni en el ventrículo izquierdo.","e":"El campo cardíaco secundario aporta el ventrículo derecho, el cono y el tronco arterial, y regula la contribución de la cresta neural a la tabicación espiralada del tracto de salida. Su alteración da transposición de grandes vasos, estenosis pulmonar y doble salida ventricular derecha. El campo primario aporta aurículas y ventrículo izquierdo."}
+]
+</script>
+
+<script>
+(function(){
+  const Q = JSON.parse(document.getElementById('quiz').textContent);
+  const DUNNO = "No lo sé — necesito repasar";
+  const LET = ["A","B","C","D","E"];
+  const app = document.getElementById('app');
+  let i = 0, answers = new Array(Q.length).fill(null), showHint = false, mode = "start";
+
+  const esc = s => String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+
+  function optsOf(q){ return q.o.concat([DUNNO]); }
+  function isRight(n){ return answers[n] === Q[n].c; }
+  function isDunno(n){ return answers[n] === Q[n].o.length; }
+
+  function render(){
+    if(mode === "start") return renderStart();
+    if(mode === "done")  return renderDone();
+    renderQ();
+  }
+
+  function renderStart(){
+    app.innerHTML = `<div class="panel">
+      <h2 style="margin:0 0 10px;font-size:1.1rem">Antes de empezar</h2>
+      <p style="margin:0 0 14px">${Q.length} preguntas de opción múltiple sobre identificación de nivel de corte,
+      localización de lesiones, correlación clínica, derivados embrionarios y cronología del desarrollo.</p>
+      <p style="margin:0 0 14px;color:var(--muted);font-size:var(--t-sm)">Cada pregunta tiene una quinta opción,
+      <b>«${DUNNO}»</b>. Úsala cuando de verdad no lo sepas: no puntúa como acierto, pero separa
+      lo que ignoras de lo que fallas por confusión, que es información distinta al repasar.</p>
+      <p style="margin:0 0 20px;color:var(--muted);font-size:var(--t-sm)">Teclas: <b>1-5</b> para responder,
+      <b>←</b> y <b>→</b> para navegar, <b>H</b> para la pista.</p>
+      <button class="act primary" id="go">Comenzar examen</button>
+    </div>`;
+    document.getElementById('go').onclick = () => { mode = "quiz"; render(); };
+  }
+
+  function renderQ(){
+    const q = Q[i], opts = optsOf(q), ans = answers[i], answered = ans !== null;
+    app.innerHTML = `
+      <div class="prog"><i style="width:${((i+1)/Q.length*100)}%"></i></div>
+      <div class="panel">
+        <div class="meta"><span>Pregunta ${i+1} de ${Q.length}</span><span class="topic">${esc(q.t)}</span></div>
+        <p class="q">${esc(q.q)}</p>
+        <div id="opts">${opts.map((o,k) => {
+          let cls = "opt";
+          if(answered){
+            if(k === q.c) cls += " right";
+            else if(k === ans && k === q.o.length) cls += " dunno";
+            else if(k === ans) cls += " wrong";
+          }
+          return `<button class="${cls}" data-k="${k}" ${answered?'disabled':''}>
+            <span class="k">${LET[k]}</span><span>${esc(o)}</span></button>`;
+        }).join('')}</div>
+        ${(showHint && !answered) ? `<div class="hintbox"><b>Pista.</b> ${esc(q.h)}</div>` : ''}
+        ${answered ? `<div class="expl"><b>Explicación</b>${esc(q.e)}</div>` : ''}
+        <div class="row">
+          <button class="act" id="prev" ${i===0?'disabled':''}>← Anterior</button>
+          ${!answered ? `<button class="act" id="hint">Ver pista</button>` : ''}
+          <div class="spacer"></div>
+          <button class="act ${answered?'primary':''}" id="next">${i===Q.length-1 ? 'Terminar' : 'Siguiente →'}</button>
+        </div>
+      </div>`;
+    app.querySelectorAll('.opt').forEach(b => b.onclick = () => { answers[i] = +b.dataset.k; showHint = false; render(); });
+    document.getElementById('prev').onclick = () => { if(i>0){ i--; showHint=false; render(); } };
+    const h = document.getElementById('hint'); if(h) h.onclick = () => { showHint = true; render(); };
+    document.getElementById('next').onclick = () => {
+      if(i === Q.length-1){ mode = "done"; } else { i++; showHint = false; }
+      render();
+    };
+  }
+
+  function renderDone(){
+    const ok = Q.map((_,n)=>n).filter(isRight).length;
+    const dn = Q.map((_,n)=>n).filter(isDunno).length;
+    const bad = Q.map((_,n)=>n).filter(n => answers[n] !== null && !isRight(n) && !isDunno(n)).length;
+    const skip = answers.filter(a => a === null).length;
+    const pct = Math.round(ok / Q.length * 100);
+    const byTopic = {};
+    Q.forEach((q,n) => { byTopic[q.t] = byTopic[q.t] || {ok:0,tot:0}; byTopic[q.t].tot++; if(isRight(n)) byTopic[q.t].ok++; });
+    app.innerHTML = `<div class="panel">
+      <div style="color:var(--muted);font-size:var(--t-sm)">Resultado</div>
+      <div class="score">${ok}/${Q.length}</div>
+      <div class="pct">${pct} % de aciertos</div>
+      <div class="tally">
+        <div class="g"><b>${ok}</b>correctas</div>
+        <div class="r"><b>${bad}</b>falladas</div>
+        <div class="a"><b>${dn}</b>«no lo sé»</div>
+        <div><b>${skip}</b>sin responder</div>
+      </div>
+      <div class="bytopic"><b>Por tema</b><ul>${Object.entries(byTopic)
+        .sort((a,b) => (a[1].ok/a[1].tot) - (b[1].ok/b[1].tot))
+        .map(([t,v]) => `<li>${esc(t)}: ${v.ok}/${v.tot}</li>`).join('')}</ul></div>
+      <div class="row">
+        <button class="act primary" id="rev">Revisar respuestas</button>
+        <button class="act" id="again">Repetir examen</button>
+        <button class="act" id="copy">Copiar resultados para repasar</button>
+      </div>
+      <div class="toast" id="toast"></div>
+    </div>`;
+    document.getElementById('rev').onclick = () => { mode="quiz"; i=0; render(); };
+    document.getElementById('again').onclick = () => { answers = new Array(Q.length).fill(null); i=0; mode="quiz"; render(); };
+    document.getElementById('copy').onclick = () => {
+      const txt = buildExport(ok, pct);
+      navigator.clipboard.writeText(txt).then(
+        () => document.getElementById('toast').textContent = "Copiado. Pégalo en Claude para un repaso dirigido.",
+        () => { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); ta.remove();
+                document.getElementById('toast').textContent = "Copiado. Pégalo en Claude para un repaso dirigido."; });
+    };
+  }
+
+  function buildExport(ok, pct){
+    const topics = [...new Set(Q.map(q => q.t))].join(", ");
+    const L = [];
+    L.push(`RESULTADOS: Examen de práctica · Tronco encefálico y embriología`);
+    L.push(`PUNTUACIÓN: ${ok}/${Q.length} (${pct} %)`);
+    L.push(`TEMAS: ${topics}`, "");
+    L.push("FALLADAS:");
+    Q.forEach((q,n) => { if(answers[n] !== null && !isRight(n) && !isDunno(n))
+      L.push(`- P${n+1}: ${q.q} | Eligió: ${optsOf(q)[answers[n]]} | Correcta: ${q.o[q.c]} | Tema: ${q.t}`); });
+    L.push("", "A REPASAR (marcó «no lo sé»):");
+    Q.forEach((q,n) => { if(isDunno(n))
+      L.push(`- P${n+1}: ${q.q} | Correcta: ${q.o[q.c]} | Tema: ${q.t}`); });
+    L.push("", "SIN RESPONDER:");
+    Q.forEach((q,n) => { if(answers[n] === null)
+      L.push(`- P${n+1}: ${q.q} | Correcta: ${q.o[q.c]} | Tema: ${q.t}`); });
+    L.push("", "CORRECTAS:");
+    Q.forEach((q,n) => { if(isRight(n)) L.push(`- P${n+1}: ${q.q.slice(0,80)}… | Tema: ${q.t}`); });
+    return L.join("\n");
+  }
+
+  document.addEventListener('keydown', e => {
+    if(mode !== "quiz") return;
+    if(e.key >= '1' && e.key <= '5'){
+      const k = +e.key - 1;
+      if(k < optsOf(Q[i]).length && answers[i] === null){ answers[i] = k; showHint=false; render(); }
+    } else if(e.key === 'ArrowRight'){ document.getElementById('next').click(); }
+    else if(e.key === 'ArrowLeft' && i > 0){ i--; showHint=false; render(); }
+    else if(e.key.toLowerCase() === 'h'){ const h=document.getElementById('hint'); if(h) h.click(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
